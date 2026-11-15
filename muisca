@@ -1,0 +1,26 @@
+from pathlib import Path
+
+html_path = Path("/mnt/data/muisca_step_by_step_website.html")
+html = html_path.read_text(encoding="utf-8")
+
+marker = ".brand{font-weight:850;letter-spacing:.08em;font-size:1.05rem}"
+replacement = (
+    ".brand-lockup{display:flex;align-items:center;gap:9px;margin-right:auto;flex:0 0 auto}"
+    ".university-logo{display:block;width:36px;height:36px;object-fit:contain;"
+    "background:#fff;border-radius:6px;padding:2px;flex:0 0 36px}"
+    + marker
+)
+if ".brand-lockup{" not in html:
+    html = html.replace(marker, replacement)
+
+# Keep the small logo aligned to the far left on narrow screens too.
+mobile_marker = "@media(max-width:760px){nav{align-items:flex-start;flex-direction:column}"
+mobile_replacement = (
+    "@media(max-width:760px){.brand-lockup{align-self:flex-start}"
+    ".university-logo{width:32px;height:32px;flex-basis:32px}"
+    "nav{align-items:flex-start;flex-direction:column}"
+)
+html = html.replace(mobile_marker, mobile_replacement)
+
+html_path.write_text(html, encoding="utf-8")
+print("Done: UMAYOR logo is now small and positioned at the far left of the header.")
